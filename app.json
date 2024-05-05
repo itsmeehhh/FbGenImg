@@ -38,7 +38,7 @@
     },
     "BING_IMAGE_COOKIE": {
       "description": "your bing cookie",
-      "required": true,
+      "required": false,
       "value": ""
     }
     },
