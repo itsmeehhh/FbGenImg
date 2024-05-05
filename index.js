@@ -40,7 +40,7 @@ botly.on("message", async (senderId, message, data) => {
 
   /*--------- s t a r t ---------*/
   if (message.message.text) {
-    botly.sendText({id: senderId, text: "يرجى ارسال الصور فقط ❤️"});
+    botly.sendText({id: senderId, text: "يرجى ارسال الصور فقط لتحويلها الى انيم ❤️"});
     } else if (message.message.attachments[0].payload.sticker_id) {
       botly.sendText({id: senderId, text: "(Y)"}) ;
     } else if (message.message.attachments[0].type == "image") {
@@ -68,9 +68,9 @@ const attachment = message.message.attachments[0]
     
     }
     } else if (message.message.attachments[0].type == "audio") {
-      botly.sendText({id: senderId, text: "يرجى ارسال النصوص فقط ❤️"});
+      botly.sendText({id: senderId, text: "يرجى ارسال الصور فقط ❤️"});
         } else if (message.message.attachments[0].type == "video") {
-      botly.sendText({id: senderId, text: "يرجى ارسال النصوص فقط ❤️"});
+      botly.sendText({id: senderId, text: "يرجى ارسال الصور فقط ❤️"});
     }
   /*--------- e n d ---------*/
 //botly.sendAction({id: senderId, action: Botly.CONST.ACTION_TYPES.TYPING_OFF}); 
@@ -83,9 +83,9 @@ botly.on("postback", async (senderId, message, postback, data, ref) => {
     /*--------- s t a r t ---------*/
     if (message.postback){ // Normal (buttons)
     if (postback == "GET_STARTED"){           botly.sendGeneric({id: senderId, elements: {
-                title: "سعيد بلقاءك ❤️، انا هنا لتحويل كل ما في بالك الى صور ابداعية 😍",
+                title: "سعيد بلقاءك ❤️، انا هنا لتحويل كل صورك الى صور ابداعية 😍",
                 image_url: "https://telegra.ph/file/77edfdf7b35823caf90f6.jpg",
-                subtitle: "ارسل نصا لكي احوله الى صورة ❤️",
+                subtitle: "ارسل صورة لكي احوله الى انمي ❤️",
                 buttons: [
                   botly.createPostbackButton("مطور البوت 🇲🇦😄", "Owner"),
                 ]}, aspectRatio: Botly.CONST.IMAGE_ASPECT_RATIO.HORIZONTAL});
@@ -125,7 +125,7 @@ botly.setGreetingText({
     greeting: [
       {
         locale: "default",
-        text: "CatBot - Image Generator Bot\nهو روبوت لتحويل نص الى صور واقعية 😯\n❤️🇲🇦"
+        text: "CatBot - Image Generator Bot\nهو روبوت لتحويل صورة الى انمي 😯\n❤️🇲🇦"
       }
     ]
   });
