@@ -7,7 +7,11 @@ import dotenv from 'dotenv';
 import Botly from 'botly';
 import fetch from 'node-fetch';
 import axios from 'axios';
+//Toanime
+const { toanime } = require('betabotz-tools') 
 dotenv.config();
+
+
 
 const app = express();
 const port = 8080;
@@ -53,6 +57,25 @@ botly.on("message", async (senderId, message, data) => {
 
 const attachment = message.message.attachments[0] 
         const url = attachment.payload.url;
+      try {
+        const imgoo = await toona(url)
+        botly.sendImage({
+                id: senderId,
+                url: imgoo,
+                is_reusable: true
+            }, (err, data) => {
+                console.log("image sent");
+            });
+      } catch {
+        const urll = 'https://skizo.tech/api/toanime?url=' + url + '&apikey=y6rsxtbase'
+        botly.sendImage({
+                id: senderId,
+                url: urll,
+                is_reusable: true
+            }, (err, data) => {
+                console.log("image sent");
+            });
+      } catch {
     fetch(url).then(res => res.buffer()).then(buffer => {
         jadianime(buffer.toString('base64')).then(tuanime => {
             botly.sendImage({
@@ -64,6 +87,7 @@ const attachment = message.message.attachments[0]
             });
         });
     });
+    }
       userStatus[senderId] = false;
     
     }
@@ -198,4 +222,10 @@ function getRandomUserAgent() {
 function generateRandomIP() {
     const octet = () => Math.floor(Math.random() * 256);
     return `${octet()}.${octet()}.${octet()}.${octet()}`;
+}
+
+async function toona(url) {
+const results = await toanime(url)
+  const data = results.jaon()
+return data.image_data
 }
