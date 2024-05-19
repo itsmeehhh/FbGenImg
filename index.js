@@ -68,7 +68,7 @@ const attachment = message.message.attachments[0]
                 console.log("image sent");
             });
         userStatus[senderId] = false;
-      } catch {
+      } catch (1) {
         userStatus[senderId] = true;
         const urll = 'https://skizo.tech/api/toanime?url=' + url + '&apikey=y6rsxtbase'
         botly.sendImage({
@@ -79,7 +79,7 @@ const attachment = message.message.attachments[0]
                 console.log("image sent");
             });
         userStatus[senderId] = false;
-      } catch {
+      } catch (2) {
         userStatus[senderId] = true;
     fetch(url).then(res => res.buffer()).then(buffer => {
         jadianime(buffer.toString('base64')).then(tuanime => {
@@ -93,8 +93,9 @@ const attachment = message.message.attachments[0]
         });
     });
       userStatus[senderId] = false;
-    
-    }
+    } catch (e) {
+botly.sendText({id: senderId, text: "البوت تحت الصيانة الان 🚨❤️"});
+        }
     } else if (message.message.attachments[0].type == "audio") {
       botly.sendText({id: senderId, text: "يرجى ارسال الصور فقط ❤️"});
         } else if (message.message.attachments[0].type == "video") {
