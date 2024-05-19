@@ -58,6 +58,7 @@ botly.on("message", async (senderId, message, data) => {
 const attachment = message.message.attachments[0] 
         const url = attachment.payload.url;
       try {
+        userStatus[senderId] = true;
         const imgoo = await toona(url)
         botly.sendImage({
                 id: senderId,
@@ -66,7 +67,9 @@ const attachment = message.message.attachments[0]
             }, (err, data) => {
                 console.log("image sent");
             });
+        userStatus[senderId] = false;
       } catch {
+        userStatus[senderId] = true;
         const urll = 'https://skizo.tech/api/toanime?url=' + url + '&apikey=y6rsxtbase'
         botly.sendImage({
                 id: senderId,
@@ -75,7 +78,9 @@ const attachment = message.message.attachments[0]
             }, (err, data) => {
                 console.log("image sent");
             });
+        userStatus[senderId] = false;
       } catch {
+        userStatus[senderId] = true;
     fetch(url).then(res => res.buffer()).then(buffer => {
         jadianime(buffer.toString('base64')).then(tuanime => {
             botly.sendImage({
@@ -87,9 +92,6 @@ const attachment = message.message.attachments[0]
             });
         });
     });
-    } catch {
-        botly.sendText({id: senderId, text: "البوت تحت الصيانة الان 🚨❤️"});
-      }
       userStatus[senderId] = false;
     
     }
