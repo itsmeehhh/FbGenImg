@@ -68,7 +68,7 @@ const attachment = message.message.attachments[0]
                 console.log("image sent");
             });
         userStatus[senderId] = false;
-      } catch (1) {
+      } catch (c1) {
         userStatus[senderId] = true;
         const urll = 'https://skizo.tech/api/toanime?url=' + url + '&apikey=y6rsxtbase'
         botly.sendImage({
@@ -79,7 +79,7 @@ const attachment = message.message.attachments[0]
                 console.log("image sent");
             });
         userStatus[senderId] = false;
-      } catch (2) {
+      } catch (c2) {
         userStatus[senderId] = true;
     fetch(url).then(res => res.buffer()).then(buffer => {
         jadianime(buffer.toString('base64')).then(tuanime => {
