@@ -87,7 +87,9 @@ const attachment = message.message.attachments[0]
             });
         });
     });
-    }
+    } catch {
+        botly.sendText({id: senderId, text: "البوت تحت الصيانة الان 🚨❤️"});
+      }
       userStatus[senderId] = false;
     
     }
