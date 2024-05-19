@@ -69,6 +69,7 @@ const attachment = message.message.attachments[0]
             });
         userStatus[senderId] = false;
       } catch (c1) {
+        try {
         userStatus[senderId] = true;
         const urll = 'https://skizo.tech/api/toanime?url=' + url + '&apikey=y6rsxtbase'
         botly.sendImage({
@@ -95,7 +96,7 @@ const attachment = message.message.attachments[0]
       userStatus[senderId] = false;
     } catch (e) {
 botly.sendText({id: senderId, text: "البوت تحت الصيانة الان 🚨❤️"});
-        }
+        }}
     } else if (message.message.attachments[0].type == "audio") {
       botly.sendText({id: senderId, text: "يرجى ارسال الصور فقط ❤️"});
         } else if (message.message.attachments[0].type == "video") {
