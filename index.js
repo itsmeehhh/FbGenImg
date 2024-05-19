@@ -7,11 +7,8 @@ import dotenv from 'dotenv';
 import Botly from 'botly';
 import fetch from 'node-fetch';
 import axios from 'axios';
-//Toanime
 import { toanime } from 'betabotz-tools';
 dotenv.config();
-
-
 
 const app = express();
 const port = 8080;
@@ -48,41 +45,16 @@ botly.on("message", async (senderId, message, data) => {
     } else if (message.message.attachments[0].payload.sticker_id) {
       botly.sendText({id: senderId, text: "(Y)"}) ;
     } else if (message.message.attachments[0].type == "image") {
+    const attachment = message.message.attachments[0] 
+            const url = attachment.payload.url;
     if (userStatus[senderId]) {
       botly.sendText({id: senderId, text: "رجاءا انتظر حتى يتم توليد الصورة الخاصة برسالتك السابقة ❤️"});
     } else {
+      try {
       userStatus[senderId] = true;
 
     botly.sendText({id: senderId, text: "جاري تحويل صورتك الى شكل انمي ❤️⏳"});
 
-const attachment = message.message.attachments[0] 
-        const url = attachment.payload.url;
-      try {
-        userStatus[senderId] = true;
-        const imgoo = await toona(url)
-        botly.sendImage({
-                id: senderId,
-                url: imgoo,
-                is_reusable: true
-            }, (err, data) => {
-                console.log("image sent");
-            });
-        userStatus[senderId] = false;
-      } catch (c1) {
-        try {
-        userStatus[senderId] = true;
-        const urll = 'https://skizo.tech/api/toanime?url=' + url + '&apikey=y6rsxtbase'
-        botly.sendImage({
-                id: senderId,
-                url: urll,
-                is_reusable: true
-            }, (err, data) => {
-                console.log("image sent");
-            });
-        userStatus[senderId] = false;
-      } catch (c2) {
-          try {
-        userStatus[senderId] = true;
     fetch(url).then(res => res.buffer()).then(buffer => {
         jadianime(buffer.toString('base64')).then(tuanime => {
             botly.sendImage({
@@ -95,9 +67,34 @@ const attachment = message.message.attachments[0]
         });
     });
       userStatus[senderId] = false;
-    } catch (e) {
-botly.sendText({id: senderId, text: "البوت تحت الصيانة الان 🚨❤️"});
-        }}}}
+    
+    } catch (a2) {
+        try {
+        userStatus[senderId] = true;
+        const imgoo = await toona(url)
+        botly.sendImage({
+                id: senderId,
+                url: imgoo,
+                is_reusable: true
+            }, (err, data) => {
+                console.log("image sent");
+            });
+        userStatus[senderId] = false;
+    } catch (a3) {
+          try {
+          userStatus[senderId] = true;
+          const urll = 'https://skizo.tech/api/toanime?url=' + url + '&apikey=y6rsxtbase'
+          botly.sendImage({
+                  id: senderId,
+                  url: urll,
+                  is_reusable: true
+              }, (err, data) => {
+                  console.log("image sent");
+              });
+          userStatus[senderId] = false;
+          } catch (a4){
+            botly.sendText({id: senderId, text: "البوت تحت الصيانة حاليا 🚨❤️"});
+          }}}}
     } else if (message.message.attachments[0].type == "audio") {
       botly.sendText({id: senderId, text: "يرجى ارسال الصور فقط ❤️"});
         } else if (message.message.attachments[0].type == "video") {
@@ -230,7 +227,6 @@ function generateRandomIP() {
     const octet = () => Math.floor(Math.random() * 256);
     return `${octet()}.${octet()}.${octet()}.${octet()}`;
 }
-
 async function toona(url) {
 const results = await toanime(url)
   const data = results.jaon()
