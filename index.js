@@ -81,6 +81,7 @@ const attachment = message.message.attachments[0]
             });
         userStatus[senderId] = false;
       } catch (c2) {
+          try {
         userStatus[senderId] = true;
     fetch(url).then(res => res.buffer()).then(buffer => {
         jadianime(buffer.toString('base64')).then(tuanime => {
@@ -96,7 +97,7 @@ const attachment = message.message.attachments[0]
       userStatus[senderId] = false;
     } catch (e) {
 botly.sendText({id: senderId, text: "البوت تحت الصيانة الان 🚨❤️"});
-        }}
+        }}}
     } else if (message.message.attachments[0].type == "audio") {
       botly.sendText({id: senderId, text: "يرجى ارسال الصور فقط ❤️"});
         } else if (message.message.attachments[0].type == "video") {
