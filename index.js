@@ -8,7 +8,7 @@ import Botly from 'botly';
 import fetch from 'node-fetch';
 import axios from 'axios';
 //Toanime
-const { toanime } = require('betabotz-tools') 
+import { toanime } from 'betabotz-tools';
 dotenv.config();
 
 
