@@ -50,10 +50,9 @@ botly.on("message", async (senderId, message, data) => {
     if (userStatus[senderId]) {
       botly.sendText({id: senderId, text: "رجاءا انتظر حتى يتم توليد الصورة الخاصة برسالتك السابقة ❤️"});
     } else {
+      botly.sendText({id: senderId, text: "جاري تحويل صورتك الى شكل انمي ❤️⏳"});
       try {
       userStatus[senderId] = true;
-
-    botly.sendText({id: senderId, text: "جاري تحويل صورتك الى شكل انمي ❤️⏳"});
 
     fetch(url).then(res => res.buffer()).then(buffer => {
         jadianime(buffer.toString('base64')).then(tuanime => {
