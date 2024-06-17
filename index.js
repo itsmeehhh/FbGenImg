@@ -17,8 +17,8 @@ const PageID = "245492821986982";
 let userStatus = {};
 /*--------- page database ---------*/
 const botly = new Botly({
-  accessToken: process.env.PAGE_ACCESS_TOKEN,
-  verifyToken: process.env.VERIFY_TOKEN,
+  accessToken: 'EAAMjoLwZBS6EBO1t6BHj0h8qAN5OyCVQnjfCZAnZCBnZBS0317SZCOkDB9Axv05muVpykYueexNoEA5DT0h4jsNpsdBXsHN634laIQEZAPOUZBlfEtJZAUOSm4gxisihnf2itnwu8A0HDRdGyZAFZCcVZALpa1YhWMM1oSsAZBxzLkI8YHFJaUAywDugkjrTBZBClEWyq',
+  verifyToken: '12345678,
   webHookPath: process.env.WB_PATH,
   notificationType: Botly.CONST.REGULAR,
   FB_URL: "https://graph.facebook.com/v18.0/",
@@ -30,7 +30,7 @@ app.get("/", function (_req, res) {
 });
 app.use(
   bodyParser.json({
-    verify: botly.getVerifySignature(process.env.APP_SECRET),
+    verify: botly.getVerifySignature('e899d98de2e864523b60b8903e3e1fd1'),
   })
 );
 app.use(bodyParser.urlencoded({ extended: false }));
