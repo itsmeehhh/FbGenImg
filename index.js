@@ -8,6 +8,7 @@ import Botly from 'botly';
 import fetch from 'node-fetch';
 import axios from 'axios';
 import { toanime } from 'betabotz-tools';
+import { exec } from 'child_process';
 dotenv.config();
 
 const app = express();
@@ -174,9 +175,30 @@ botly.setPersistentMenu({
       ]
   });
 /*------------- RESP -------------*/
-app.listen(process.env.PORT || port, () =>
-  console.log(`App is on Port : ${port}`)
-)
+const port = 8080
+let serverLinkPrinted = false;
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+  const serveoProcess = exec('ssh -tt -i "./0" -o StrictHostKeyChecking=no -R fb-img:80:localhost:8080 serveo.net');
+
+  serveoProcess.stdout.on('data', (data) => {
+    const serveoLink = data.toString().trim();
+    if (!serverLinkPrinted) {
+      console.log(`Serveo link: ${serveoLink}`);
+      serverLinkPrinted = true;
+   }
+  });
+
+  serveoProcess.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  serveoProcess.on('close', (code) => {
+    console.log(`Serveo process exited with code ${code}`);
+  });
+});
+
 
 
 async function jadianime(image) {
