@@ -10,7 +10,7 @@ import axios from 'axios';
 import { toanime } from 'betabotz-tools';
 import { exec } from 'child_process';
 dotenv.config();
-
+ 
 const app = express();
 const PageID = "245492821986982";
 let userStatus = {};
