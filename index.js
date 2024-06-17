@@ -18,7 +18,7 @@ let userStatus = {};
 /*--------- page database ---------*/
 const botly = new Botly({
   accessToken: 'EAAMjoLwZBS6EBO1t6BHj0h8qAN5OyCVQnjfCZAnZCBnZBS0317SZCOkDB9Axv05muVpykYueexNoEA5DT0h4jsNpsdBXsHN634laIQEZAPOUZBlfEtJZAUOSm4gxisihnf2itnwu8A0HDRdGyZAFZCcVZALpa1YhWMM1oSsAZBxzLkI8YHFJaUAywDugkjrTBZBClEWyq',
-  verifyToken: '12345678,
+  verifyToken: '12345678',
   webHookPath: process.env.WB_PATH,
   notificationType: Botly.CONST.REGULAR,
   FB_URL: "https://graph.facebook.com/v18.0/",
