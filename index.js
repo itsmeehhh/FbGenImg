@@ -12,7 +12,6 @@ import { exec } from 'child_process';
 dotenv.config();
 
 const app = express();
-const port = 8080;
 const PageID = "245492821986982";
 let userStatus = {};
 /*--------- page database ---------*/
