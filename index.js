@@ -175,11 +175,11 @@ botly.setPersistentMenu({
   });
 /*------------- RESP -------------*/
 const port = 8080
-let serverLinkPrinted = false;
+//let serverLinkPrinted = false;
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
-  const serveoProcess = exec('ssh -tt -i "./0" -o StrictHostKeyChecking=no -R fb-img:80:localhost:8080 serveo.net');
+  /*const serveoProcess = exec('ssh -tt -i "./0" -o StrictHostKeyChecking=no -R fb-img:80:localhost:8080 serveo.net');
 
   serveoProcess.stdout.on('data', (data) => {
     const serveoLink = data.toString().trim();
@@ -195,7 +195,7 @@ app.listen(port, () => {
 
   serveoProcess.on('close', (code) => {
     console.log(`Serveo process exited with code ${code}`);
-  });
+  });*/
 });
 
 
