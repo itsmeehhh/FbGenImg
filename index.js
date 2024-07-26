@@ -58,7 +58,7 @@ botly.on("message", async (senderId, message, data) => {
               }, (err, data) => {
                   console.log("image sent");
               });
-    } catch (2) {
+    } catch (a2) {
     const ress = await toanime(url)
     const to2 = ress.image_data
     botly.sendImage({
