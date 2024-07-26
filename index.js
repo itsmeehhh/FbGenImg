@@ -45,55 +45,30 @@ botly.on("message", async (senderId, message, data) => {
     } else if (message.message.attachments[0].payload.sticker_id) {
       botly.sendText({id: senderId, text: "(Y)"}) ;
     } else if (message.message.attachments[0].type == "image") {
+        botly.sendText({id: senderId, text: "إنتظر دقيقة حتى أقوم بتحويل صورتك ❤️"});
     const attachment = message.message.attachments[0] 
             const url = attachment.payload.url;
-    if (userStatus[senderId]) {
-      botly.sendText({id: senderId, text: "رجاءا انتظر حتى يتم توليد الصورة الخاصة برسالتك السابقة ❤️"});
-    } else {
-      botly.sendText({id: senderId, text: "جاري تحويل صورتك الى شكل انمي ❤️⏳"});
-      try {
-      userStatus[senderId] = true;
-
-    fetch(url).then(res => res.buffer()).then(buffer => {
-        jadianime(buffer.toString('base64')).then(tuanime => {
-            botly.sendImage({
-                id: senderId,
-                url: 'https://www.drawever.com' + tuanime.urls[1],
-                is_reusable: true
-            }, (err, data) => {
-                console.log("image sent");
-            });
-        });
-    });
-      userStatus[senderId] = false;
-    
-    } catch (a2) {
-        try {
-        userStatus[senderId] = true;
-        const imgoo = await toona(url)
-        botly.sendImage({
-                id: senderId,
-                url: imgoo,
-                is_reusable: true
-            }, (err, data) => {
-                console.log("image sent");
-            });
-        userStatus[senderId] = false;
-    } catch (a3) {
-          try {
-          userStatus[senderId] = true;
-          const urll = 'https://skizo.tech/api/toanime?url=' + url + '&apikey=y6rsxtbase'
+            
+    try {
+    const to1 = 'https://skizo.tech/api/toanime?url=' + url + '&apikey=y6rsxtbase'
           botly.sendImage({
                   id: senderId,
-                  url: urll,
+                  url: to1,
                   is_reusable: true
               }, (err, data) => {
                   console.log("image sent");
               });
-          userStatus[senderId] = false;
-          } catch (a4){
-            botly.sendText({id: senderId, text: "البوت تحت الصيانة حاليا 🚨❤️"});
-          }}}}
+    } catch (2) {
+    const ress = await toanime(url)
+    const to2 = ress.image_data
+    botly.sendImage({
+                  id: senderId,
+                  url: to2,
+                  is_reusable: true
+              }, (err, data) => {
+                  console.log("image sent");
+              });
+    }
     } else if (message.message.attachments[0].type == "audio") {
       botly.sendText({id: senderId, text: "يرجى ارسال الصور فقط ❤️"});
         } else if (message.message.attachments[0].type == "video") {
@@ -197,58 +172,3 @@ app.listen(port, () => {
     console.log(`Serveo process exited with code ${code}`);
   });*/
 });
-
-
-
-async function jadianime(image) {
-    return new Promise(async(resolve, reject) => {
-        const requestId = Math.random().toString(36).substring(7); 
-        const userAgent = getRandomUserAgent();
-        const ipAddress = generateRandomIP();
-        axios("https://www.drawever.com/api/photo-to-anime", {
-            headers: {
-                "content-type": "application/json",
-                "X-Request-ID": requestId,
-                "user-agent": userAgent,
-                "X-Forwarded-For": ipAddress,
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-                "Accept-Encoding": "gzip, deflate, br, zstd",
-                "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
-                "Cookie": "DRAWEVER_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDk4OWJlZDM5NzI3ODhiN2U1MjY0NCIsImVtYWlsIjoidGhlc2hhZG93YnJva2VyczEzM0BnbWFpbC5jb20iLCJmdWxsbmFtZSI6IlNoYWRvdyIsImNyZWRpdHMiOjAsImlhdCI6MTcxMTkwMTExOH0.TQmn5BBN4hrraSaggn9skoTJC7h7LDin9kq0zweSvdc",
-                "Referer": "https://www.drawever.com/process",
-                "Sec-Ch-Ua": "\"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"",
-                "Sec-Ch-Ua-Mobile": "?0",
-                "Sec-Ch-Ua-Platform": "\"Windows\"",
-                "Sec-Fetch-Dest": "document",
-                "Sec-Fetch-Mode": "navigate",
-                "Sec-Fetch-Site": "same-origin",
-                "Upgrade-Insecure-Requests": "1",
-            },
-            "data": { "data": "data:image/jpeg;base64," + image },
-            "method": "POST"
-        }).then(res => { 
-            let yanz = res.data
-            resolve(yanz)
-        }).catch(err => {
-            reject(err)
-        });
-    });
-}
-
-function getRandomUserAgent() {
-    const userAgents = [
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.192 Safari/537.36"
-    ];
-    return userAgents[Math.floor(Math.random() * userAgents.length)];
-}
-
-function generateRandomIP() {
-    const octet = () => Math.floor(Math.random() * 256);
-    return `${octet()}.${octet()}.${octet()}.${octet()}`;
-}
-async function toona(url) {
-const results = await toanime(url)
-  const data = results.jaon()
-return data.image_data
-}
