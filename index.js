@@ -47,7 +47,7 @@ botly.on("message", async (senderId, message, data) => {
     } else if (message.message.attachments[0].type == "image") {
         botly.sendText({id: senderId, text: "إنتظر دقيقة حتى أقوم بتحويل صورتك ❤️"});
     const attachment = message.message.attachments[0] 
-            const url = attachment.payload.url;
+            const url = uploadImage(attachment.payload.url)
             
     try {
     const to1 = 'https://skizo.tech/api/toanime?url=' + url + '&apikey=y6rsxtbase'
@@ -172,3 +172,28 @@ app.listen(port, () => {
     console.log(`Serveo process exited with code ${code}`);
   });*/
 });
+async function uploadImage(imageUrl) {
+  try {
+    const imgResponse = await fetch(imageUrl);
+    const imgBuffer = await imgResponse.buffer();
+
+    let data = new FormData();
+    data.append('file', imgBuffer, { filename: 'image.jpg' });
+
+    let config = {
+      method: 'POST',
+      url: 'https://telegra.ph/upload',
+      headers: {
+        ...data.getHeaders()
+      },
+      data: data
+    };
+
+    const response = await axios(config);
+    const fin = 'https://telegra.ph' + response.data[0].src
+    return fin 
+   
+  } catch (error) {
+    console.error('Error uploading image')
+  }
+}
