@@ -192,8 +192,7 @@ async function uploadImage(imageUrl) {
     const response = await axios(config);
     const fin = 'https://telegra.ph' + response.data[0].src
     return fin 
-   
   } catch (error) {
-    console.error('Error uploading image')
+    console.error('Error uploading image:' + error)
   }
 }
