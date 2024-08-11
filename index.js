@@ -1,4 +1,3 @@
-import { generateImagesLinks } from 'bimg';
 import fs from 'fs';
 import { Blob, FormData } from 'formdata-node';
 import express from 'express';
@@ -7,8 +6,6 @@ import dotenv from 'dotenv';
 import Botly from 'botly';
 import fetch from 'node-fetch';
 import axios from 'axios';
-import { toanime } from 'betabotz-tools';
-import { exec } from 'child_process';
 dotenv.config();
  
 const app = express();
@@ -47,28 +44,21 @@ botly.on("message", async (senderId, message, data) => {
     } else if (message.message.attachments[0].type == "image") {
         botly.sendText({id: senderId, text: "إنتظر دقيقة حتى أقوم بتحويل صورتك ❤️"});
     const attachment = message.message.attachments[0] 
-            const url = uploadImage(attachment.payload.url)
-            
-    try {
-    const to1 = 'https://skizo.tech/api/toanime?url=' + url + '&apikey=y6rsxtbase'
-          botly.sendImage({
+            const imageUrl = uploadImage(attachment.payload.url)
+     processImage().then((url) => {
+     //
+  botly.sendImage({
                   id: senderId,
-                  url: to1,
+                  url: url,
                   is_reusable: true
               }, (err, data) => {
-                  console.log("image sent");
+         botly.sendText({id: senderId, text: "نقوم باصلاح البوت الان ❤️\n انتظر حتى ننهي الاصلاح 🙏🏻"});
               });
-    } catch (a2) {
-    const ress = await toanime(url)
-    const to2 = ress.image_data
-    botly.sendImage({
-                  id: senderId,
-                  url: to2,
-                  is_reusable: true
-              }, (err, data) => {
-                  console.log("image sent");
-              });
-    }
+              //
+}).catch((error) => {
+  console.error('Error:', error);
+});
+    
     } else if (message.message.attachments[0].type == "audio") {
       botly.sendText({id: senderId, text: "يرجى ارسال الصور فقط ❤️"});
         } else if (message.message.attachments[0].type == "video") {
@@ -150,35 +140,72 @@ botly.setPersistentMenu({
   });
 /*------------- RESP -------------*/
 const port = 8080
-//let serverLinkPrinted = false;
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
-  /*const serveoProcess = exec('ssh -tt -i "./0" -o StrictHostKeyChecking=no -R fb-img:80:localhost:8080 serveo.net');
-
-  serveoProcess.stdout.on('data', (data) => {
-    const serveoLink = data.toString().trim();
-    if (!serverLinkPrinted) {
-      console.log(`Serveo link: ${serveoLink}`);
-      serverLinkPrinted = true;
-   }
-  });
-
-  serveoProcess.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
-
-  serveoProcess.on('close', (code) => {
-    console.log(`Serveo process exited with code ${code}`);
-  });*/
 });
-async function uploadImage(imageUrl) {
+async function processImage() {
+  
   try {
-    const imgResponse = await fetch(imageUrl);
-    const imgBuffer = await imgResponse.buffer();
+    const tobase64 = await imageUrlToBase64(imageUrl);
+
+    const data = JSON.stringify({
+      "image": `${tobase64}`
+    });
+
+    let config = {
+      method: 'POST',
+      url: 'https://www.drawever.com/api/tools/process',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 13; RMX3430 Build/SP1A.210812.016) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.186 Mobile Safari/537.36',
+        'Accept': 'application/json',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Content-Type': 'application/json',
+        'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Android WebView";v="126"',
+        'sec-ch-ua-mobile': '?1',
+        'path': '/ai/photo-to-anime',
+        'sec-ch-ua-platform': '"Android"',
+        'origin': 'https://www.drawever.com',
+        'x-requested-with': 'mark.via.gp',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-dest': 'empty',
+        'referer': 'https://www.drawever.com/ai/photo-to-anime?start=1723412154131',
+        'accept-language': 'ar-MA,ar;q=0.9,en-MA;q=0.8,en-US;q=0.7,en;q=0.6',
+        'priority': 'u=1, i',
+        'Cookie': '...'},
+      data: data
+    };
+
+    const response = await axios.request(config);
+    const base64Data = response.data[1].replace(/^data:image\/jpeg;base64,/, "");
+
+    const telegraphUrl = await uploadImage(`data:image/jpeg;base64,${base64Data}`);
+
+    return telegraphUrl;
+  } catch (error) {
+    console.error('Error processing the image:', error);
+  }
+}
+
+async function imageUrlToBase64(imgUrl) {
+  try {
+    const response = await axios.get(imgUrl, { responseType: 'arraybuffer' });
+    const buffer = Buffer.from(response.data, 'binary');
+    const imageBase64 = buffer.toString('base64');
+    return `data:image/jpeg;base64,${imageBase64}`;
+  } catch (error) {
+    console.error('Error converting image URL to Base64:', error);
+    throw error;
+  }
+}
+
+async function uploadImage(base64Image) {
+  try {
+    const imageBuffer = Buffer.from(base64Image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
     let data = new FormData();
-    data.append('file', imgBuffer, { filename: 'image.jpg' });
+    data.append('file', imageBuffer, { filename: 'image.jpg' });
 
     let config = {
       method: 'POST',
@@ -190,9 +217,9 @@ async function uploadImage(imageUrl) {
     };
 
     const response = await axios(config);
-    const fin = 'https://telegra.ph' + response.data[0].src
-    return fin 
+    const fin = 'https://telegra.ph' + response.data[0].src;
+    return fin;
   } catch (error) {
-    console.error('Error uploading image:' + error)
+    console.error('Error uploading image:', error);
   }
 }
